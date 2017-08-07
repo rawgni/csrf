@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 
 	"github.com/pkg/errors"
@@ -187,6 +188,12 @@ func (cs *csrf) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	// Save a copy of this request for debugging.
+	requestDump, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(requestDump))
 
 	// Retrieve the token from the session.
 	// An error represents either a cookie that failed HMAC validation
